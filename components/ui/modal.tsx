@@ -1,6 +1,12 @@
 "use client";
 
-import { Dialog } from "./dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogDescription,
+  DialogTitle,
+} from "./dialog";
 
 interface ModalProps {
   title: string;
@@ -21,9 +27,18 @@ const Modal = ({
     if (!open) onClose();
   };
 
-  return <Dialog>
-    
-  </Dialog>
+  return (
+    <Dialog open={isOpen} onOpenChange={onChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
+        </DialogHeader>
+
+        <div>{children}</div>
+      </DialogContent>
+    </Dialog>
+  );
 };
 
 export default Modal;
