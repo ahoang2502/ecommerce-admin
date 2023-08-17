@@ -14,8 +14,10 @@ import {
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { Input } from "../ui/input";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   name: z.string().min(1),
@@ -31,8 +33,17 @@ const StoreModal = () => {
     },
   });
 
+  const isLoading = form.formState.isSubmitting;
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+    try {
+      const response = await axios.post("/api/stores", values);
+
+      window.location.assign(`/${response.data.id}`); // will refresh the entire page, data is in sync.
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong.");
+    }
   };
 
   return (
@@ -53,7 +64,11 @@ const StoreModal = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="E-Commerce" {...field} />
+                      <Input
+                        disabled={isLoading}
+                        placeholder="E-Commerce"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -61,10 +76,16 @@ const StoreModal = () => {
               />
 
               <div className="pt-6 space-x-2 flex items-center justify-end w-full ">
-                <Button variant="outline" onClick={storeModal.onClose}>
+                <Button
+                  variant="outline"
+                  onClick={storeModal.onClose}
+                  disabled={isLoading}
+                >
                   Cancel
                 </Button>
-                <Button type="submit">Continue</Button>
+                <Button type="submit" disabled={isLoading}>
+                  Continue
+                </Button>
               </div>
             </form>
           </Form>
