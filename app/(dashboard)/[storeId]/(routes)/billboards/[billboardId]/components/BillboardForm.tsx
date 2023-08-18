@@ -3,6 +3,7 @@
 import Heading from "@/components/Heading";
 import AlertModal from "@/components/modals/AlertModal";
 import ApiAlert from "@/components/ui/ApiAlert";
+import ImageUpload from "@/components/ui/ImageUpload";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -111,7 +112,26 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <div className="grid grid-cols-3 gap-8">
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Background Image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    disabled={isLoading}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
               name="label"
