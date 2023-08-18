@@ -2,7 +2,6 @@
 
 import Heading from "@/components/Heading";
 import AlertModal from "@/components/modals/AlertModal";
-import ApiAlert from "@/components/ui/ApiAlert";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/useOrigin";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Billboard } from "@prisma/client";
@@ -44,8 +42,6 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
   const params = useParams();
   const router = useRouter();
 
-  const origin = useOrigin();
-
   const title = initialData ? "Edit billboard" : "Create billboard";
   const description = initialData ? "Edit a billboard" : "Add a new billboard";
   const toastMessage = initialData
@@ -64,23 +60,33 @@ const BillboardForm = ({ initialData }: BillboardFormProps) => {
 
   const onSubmit = async (data: BillboardFormValues) => {
     try {
-      await axios.patch(`/api/stores/${params.storeId}`, data);
+      if (initialData) {
+        await axios.patch(
+          `/api/${params.storeId}/billboards/${params.billboardId}`,
+          data
+        );
+      } else {
+        await axios.post(`/api/${params.storeId}/billboards`, data);
+      }
 
       router.refresh();
-      toast.success("Store updated.");
+      router.push(`/${params.storeId}/billboards`);
+      toast.success(toastMessage);
     } catch (error) {
       toast.error("Something went wrong.");
     }
   };
   const onDelete = async () => {
     try {
-      await axios.delete(`/api/stores/${params.storeId}`);
+      await axios.delete(
+        `/api/${params.storeId}/billboards/${params.billboardId}`
+      );
 
       router.refresh();
       router.push("/");
-      toast.success("Store deleted successfully.");
+      toast.success("Billboard deleted successfully.");
     } catch (error) {
-      toast.error("Make sure you remove all products and categories first.");
+      toast.error("Make sure you remove all categories first.");
     }
   };
 
