@@ -28,7 +28,7 @@ const AlertModal = ({
   return (
     <Modal
       title="Are you sure?"
-      description="This action cannot be undone"
+      description="This action cannot be undone."
       isOpen={isOpen}
       onClose={onClose}
     >
