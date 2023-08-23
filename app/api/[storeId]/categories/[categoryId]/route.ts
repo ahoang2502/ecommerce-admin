@@ -12,6 +12,9 @@ export async function GET(
 
     const category = await prismadb.category.findUnique({
       where: { id: params.categoryId },
+      include: {
+        billboard: true,
+      },
     });
 
     return NextResponse.json(category);
@@ -52,7 +55,8 @@ export async function PATCH(
     const category = await prismadb.category.updateMany({
       where: { id: params.categoryId },
       data: {
-        name, billboardId
+        name,
+        billboardId,
       },
     });
 
