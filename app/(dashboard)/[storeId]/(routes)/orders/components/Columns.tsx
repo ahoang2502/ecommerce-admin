@@ -2,7 +2,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-
 export type OrderColumn = {
   id: string;
   phone: string;
@@ -38,5 +37,4 @@ export const columns: ColumnDef<OrderColumn>[] = [
     accessorKey: "createdAt",
     header: "Date",
   },
- 
 ];
